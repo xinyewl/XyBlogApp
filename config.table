@@ -1,0 +1,242 @@
+{
+  ["global_js"]	= "" ;
+  ["events"]	= {
+      ["网页加载完毕"]	= "--网页加载完毕后执行的事件\
+\
+--接收参数\
+浏览器对象,网页链接=..." ;
+      ["收到新标题"]	= "--浏览器加载新页面并获得新标题时执行的事件\
+\
+--接收参数\
+新标题=..." ;
+      ["网页即将加载"]	= "--浏览器即将加载新的网页时执行的事件\
+\
+--接收参数\
+浏览器对象,网页链接=...\
+if(网页链接:find\"https://www.ikxin.com/.\") then\
+  停止加载()\
+  进入子页面(\"浏览文章\",{链接=网页链接})\
+end\
+\
+if(网页链接:find\"https://www.ikxin.com/search/.\") then\
+  停止加载()\
+  进入子页面(\"浏览文章\",{链接=网页链接})\
+end\
+\
+if(网页链接:find\"https://www.ikxin.com/admin.\") then\
+  停止加载()\
+  进入子页面(\"浏览文章\",{链接=网页链接})\
+end" ;
+      ["程序启动"]	= "import \"android.media.MediaPlayer\"\
+import \"java.io.*\"\
+\
+local m=MediaPlayer()\
+function 播放(path)\
+  m.reset()\
+  m.setDataSource(path)\
+  m.prepare()\
+  m.start()\
+end\
+sidebar.onLongClick=function()\
+路径=this.getFilesDir().toString()..\"/drawable/oni.mp3\"\
+file,err=io.open(路径)\
+if err==nil then\
+  播放(路径)\
+else\
+  弹出消息(\"彩蛋好像被康娜吃掉了！\")\
+end\
+end" ;
+      } ;
+  ["web_control"]	= {
+      } ;
+  ["fltBtn"]	= {
+      ["显示"]	= true ;
+      ["点击事件"]	= "加载Js([[$('html,body').animate({scrollTop:0},500);]])" ;
+      ["图标"]	= "" ;
+      } ;
+  ["switch"]	= {
+      ["支持滑动页面"]	= false ;
+      ["横屏"]	= false ;
+      ["启用启动图"]	= false ;
+      ["显示状态栏"]	= true ;
+      } ;
+  ["toolbar"]	= {
+      ["启用搜索功能"]	= true ;
+      ["搜索框提示"]	= "输入关键词搜索.." ;
+      ["搜索URL"]	= "https://www.ikxin.com/search/%s" ;
+      ["menus"]	= {
+          } ;
+      ["icon_btns"]	= {
+          [1]	= {
+              ["icon"]	= "replay" ;
+              ["onClick"]	= "刷新网页()" ;
+              } ;
+          } ;
+      ["输入栏模式"]	= false ;
+      } ;
+  ["sidebar"]	= {
+      ["启用"]	= true ;
+      ["items"]	= {
+          [1]	= {
+              ["onClick"]	= "--程序启动时会执行的事件\
+device_model = Build.MODEL --设备型号 \
+version_sdk = Build.VERSION.SDK --设备SDK版本 \
+version_release = Build.VERSION.RELEASE --设备的系统版本\
+\
+import \"android.provider.Settings$Secure\"\
+android_id = Secure.getString(activity.getContentResolver(), Secure.ANDROID_ID)\
+\
+packinfo=this.getPackageManager().getPackageInfo(this.getPackageName(),((32552732/2/2-8183)/10000-6-231)/9)\
+version=tostring(packinfo.versionName)\
+versioncode=tostring(packinfo.versionCode)\
+\
+对话框()\
+.设置标题(\"当前设备\")\
+.设置消息(\"设备型号：\"..device_model..\"\\n设备SDK：\"..version_sdk..\"\\n安卓版本：\"..version_release..\"\\n设备标志：\"..android_id..\"\\n当前app版本名：\"..version..\"\\n当前app版本号：\"..versioncode)\
+--.设置积极按钮(\"确定\",function()\
+--  显示消息(\"点击了确定\")\
+--end)\
+.设置消极按钮(\"我知道啦\")\
+.显示()" ;
+              ["icon"]	= "drawable/android.png" ;
+              ["name"]	= "设备信息" ;
+              } ;
+          [2]	= {
+              ["onClick"]	= "加载网页(\"https://www.ikxin.com/admin\")" ;
+              ["icon"]	= "drawable/palette.png" ;
+              ["name"]	= "登录后台" ;
+              } ;
+          [3]	= {
+              ["onClick"]	= "分享文本(\"最近我看了一个有趣的博客！现在分享给大家看看 www.ikxin.com\")" ;
+              ["icon"]	= "drawable/share.png" ;
+              ["name"]	= "分享博客" ;
+              } ;
+          [4]	= {
+              ["onClick"]	= "import \"android.content.Intent\"\
+import \"android.net.Uri\"\
+xpcall(function() \
+  local url=\"alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/tsx01127xnmm0xcgupky74e\"\
+  activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)));\
+end,\
+function()\
+  local url = \"https://qr.alipay.com/tsx01127xnmm0xcgupky74e\";\
+  activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)));\
+end)\
+\
+弹出消息(\"你的捐赠就是我的动力\")\
+弹出消息(\"感谢支持！\")" ;
+              ["icon"]	= "drawable/currency_usd.png" ;
+              ["name"]	= "捐赠我们" ;
+              } ;
+          [5]	= {
+              ["onClick"]	= "对话框()\
+.设置标题(\"关于\")\
+.设置消息(\"心叶博客\\n作者：notte\\n内容来自：ikxin.com\")\
+.设置积极按钮(\"联系作者\",function()\
+  弹出消息(\"开始唤醒QQ\")联系QQ(52958812)\
+end)\
+.设置消极按钮(\"取消\")\
+.显示()\
+" ;
+              ["icon"]	= "drawable/human_child.png" ;
+              ["name"]	= "关于我们" ;
+              } ;
+          [6]	= {
+              ["onClick"]	= "\
+num = math.random(1,3)\
+\
+\
+if(num == 1) then\
+  tishi=\"大胆刁民居然想退出本APP！\" \
+elseif(num == 2) then\
+  tishi=\"真的要退出这么好用的APP吗？\"\
+elseif(num == 3) then\
+  tishi=\"欧尼酱，要退出我的身体吗？\"\
+end\
+\
+对话框()\
+.设置标题(\"提示\")\
+.设置消息(tishi)\
+.设置积极按钮(\"退出\",function()\
+  退出程序()\
+end)\
+.设置消极按钮(\"取消\")\
+.显示()" ;
+              ["icon"]	= "drawable/power.png" ;
+              ["name"]	= "退出" ;
+              } ;
+          } ;
+      ["启用顶部图片"]	= true ;
+      } ;
+  ["web"]	= {
+      ["惰性加载"]	= true ;
+      ["网页沉浸"]	= false ;
+      ["浏览器用户标识"]	= "自定义" ;
+      ["启用进度条"]	= true ;
+      ["customUa"]	= "fusion" ;
+      ["支持打开外部应用"]	= true ;
+      ["启用长按菜单"]	= true ;
+      } ;
+  ["colors"]	= {
+      ["悬浮按钮"]	= "#ff009688" ;
+      ["导航栏"]	= "#ff009688" ;
+      ["标签栏文本"]	= "#ffffffff" ;
+      ["状态栏"]	= "#ff009688" ;
+      ["侧滑栏列表文字"]	= "#ff333333" ;
+      ["搜索栏部件"]	= "#ffffffff" ;
+      ["搜索栏部件触摸"]	= "#00000000" ;
+      ["搜索栏背景"]	= "#ff009688" ;
+      ["顶栏部件"]	= "#ffffffff" ;
+      ["顶栏"]	= "#ff009688" ;
+      ["标签栏滑动条"]	= "#ffffffff" ;
+      ["侧滑栏列表图标"]	= "#ff757575" ;
+      ["顶栏部件触摸"]	= "#33ffffff" ;
+      ["悬浮按钮图标"]	= "#ffffffff" ;
+      ["进度条"]	= "#ff009688" ;
+      ["侧滑栏背景"]	= "#ffffffff" ;
+      ["搜索栏提示文字"]	= "#ffe4e4e4" ;
+      ["标签栏项目触摸"]	= "#00000000" ;
+      } ;
+  ["tab_bar"]	= {
+      ["items"]	= {
+          [1]	= {
+              ["name"]	= "首页" ;
+              ["url"]	= "https://www.ikxin.com/" ;
+              } ;
+          [2]	= {
+              ["name"]	= "网站" ;
+              ["url"]	= "https://www.ikxin.com/website" ;
+              } ;
+          [3]	= {
+              ["name"]	= "代码" ;
+              ["url"]	= "https://www.ikxin.com/script" ;
+              } ;
+          [4]	= {
+              ["name"]	= "系统" ;
+              ["url"]	= "https://www.ikxin.com/system" ;
+              } ;
+          [5]	= {
+              ["name"]	= "安卓" ;
+              ["url"]	= "https://www.ikxin.com/android" ;
+              } ;
+          [6]	= {
+              ["name"]	= "设计" ;
+              ["url"]	= "https://www.ikxin.com/design" ;
+              } ;
+          [7]	= {
+              ["name"]	= "资源" ;
+              ["url"]	= "https://www.ikxin.com/share" ;
+              } ;
+          } ;
+      } ;
+  ["view_attribute"]	= {
+      ["顶栏阴影强度"]	= "2dp" ;
+      ["标签栏滑动条高度"]	= "2dp" ;
+      ["搜索栏圆角弧度"]	= "2dp" ;
+      ["顶栏高度"]	= "56dp" ;
+      ["侧滑栏宽度"]	= "240dp" ;
+      ["搜索栏阴影强度"]	= "2dp" ;
+      ["顶栏标题"]	= "心叶博客" ;
+      ["标签栏高度"]	= "36dp" ;
+      } ;
+  } ;
